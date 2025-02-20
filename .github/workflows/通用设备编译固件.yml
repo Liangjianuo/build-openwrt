@@ -144,7 +144,7 @@ jobs:
         with:
           name: OpenWrt_bin${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
           path: openwrt/bin
-
+      
       - name: Organize files
         id: organize
         if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
@@ -152,14 +152,14 @@ jobs:
           cd $GITHUB_WORKSPACE
           TARGET_DIR=$(echo openwrt/bin/targets/*/*)
           if [ -d "$TARGET_DIR" ]; then
-           cd "$TARGET_DIR"
-           rm -rf packages
-           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-           echo "::set-output name=status::success"
-         else
-           echo "::error::Target directory not found: openwrt/bin/targets/*/*"
-           exit 1
-         fi
+            cd "$TARGET_DIR"
+            rm -rf packages
+            echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+            echo "::set-output name=status::success"
+          else
+            echo "::error::Target directory not found: openwrt/bin/targets/*/*"
+            exit 1
+          fi
        shell: bash
 
       - name: Upload firmware directory
