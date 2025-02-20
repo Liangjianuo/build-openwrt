@@ -146,35 +146,35 @@ jobs:
           path: openwrt/bin
       
       - name: Organize files
-       id: organize
-       if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
-       run: |
-         cd $GITHUB_WORKSPACE
-         echo "::debug::当前工作目录: $(pwd)"
-         echo "::debug::检查 openwrt/bin/targets 是否存在..."
-         if [ ! -d "openwrt/bin/targets" ]; then
-           echo "::error::关键目录缺失: openwrt/bin/targets"
-           exit 1
-         fi
+        id: organize
+        if: env.UPLOAD_FIRMWARE == 'true' && !cancelled()
+        run: |
+          cd $GITHUB_WORKSPACE
+          echo "::debug::当前工作目录: $(pwd)"
+          echo "::debug::检查 openwrt/bin/targets 是否存在..."
+          if [ ! -d "openwrt/bin/targets" ]; then
+            echo "::error::关键目录缺失: openwrt/bin/targets"
+            exit 1
+          fi
 
-         echo "::debug::目标目录结构:"
-         ls -lR openwrt/bin/targets
+          echo "::debug::目标目录结构:"
+          ls -lR openwrt/bin/targets
 
-         TARGET_DIR=$(echo openwrt/bin/targets/*/*)
-         echo "::debug::通配符匹配结果: $TARGET_DIR"
+          TARGET_DIR=$(echo openwrt/bin/targets/*/*)
+          echo "::debug::通配符匹配结果: $TARGET_DIR"
 
-         if [ -d "$TARGET_DIR" ]; then
-           cd "$TARGET_DIR"
-           rm -rf packages
-           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
-           echo "::set-output name=status::success"
-         else
-           echo "::error::无法定位固件目录，可能原因："
-           echo "::error::1. 编译未生成目标文件"
-           echo "::error::2. 目录层级不匹配（实际路径: openwrt/bin/targets/架构/芯片型号）"
-           exit 1
-         fi
-       shell: bash
+          if [ -d "$TARGET_DIR" ]; then
+            cd "$TARGET_DIR"
+            rm -rf packages
+            echo "FIRMWARE=$PWD" >> $GITHUB_ENV
+            echo "::set-output name=status::success"
+          else
+            echo "::error::无法定位固件目录，可能原因："
+            echo "::error::1. 编译未生成目标文件"
+            echo "::error::2. 目录层级不匹配（实际路径: openwrt/bin/targets/架构/芯片型号）"
+            exit 1
+          fi
+        shell: bash
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@main
