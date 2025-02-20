@@ -160,7 +160,7 @@ jobs:
             echo "::error::Target directory not found: openwrt/bin/targets/*/*"
             exit 1
           fi
-       shell: bash
+        shell: bash
 
       - name: Upload firmware directory
         uses: actions/upload-artifact@main
